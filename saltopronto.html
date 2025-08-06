@@ -125,11 +125,14 @@
       });
     }
 
-    function cancelarTeste() {
-      cancelado = true;
-      statusDiv.innerText = 'Teste cancelado';
-      cancelarBtn.classList.add('hidden');
-    }
+    
+function cancelarTeste() {
+  testeEmAndamento = false;
+  dados = [];
+  statusDiv.innerText = "Teste cancelado.";
+  window.removeEventListener('devicemotion', motionHandler);
+}
+
 
     function iniciarSequencia10Saltos() {
       const saltos = [];
