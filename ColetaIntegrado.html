@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<title>Coleta Esportiva Offline</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<style>
+    body { font-family: Arial,sans-serif; background: #f7fafd; margin: 0;}
+    .tabs { display: flex; border-bottom: 2px solid #ccc; background: #fff; }
+    .tab { flex: 1; text-align: center; padding: 15px 0; cursor: pointer; font-weight: 600; letter-spacing: 1px;}
+    .tab.active { background: #eff6ff; border-bottom: 3px solid #2563eb; color: #2563eb; }
+    .content { padding: 20px 4vw 60px 4vw; max-width: 650px; margin: auto; position: relative;}
+    .field-block {background: #fff; border-radius: 16px; box-shadow: 0 2px 6px #0001; padding: 16px 10px 8px 10px; margin-bottom: 18px; }
+    label { font-weight: bold; margin: 0 0 6px 3px; display: block; color: #222; }
+    input, select, button, textarea {
+      width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 7px; margin-top: 4px; font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input[type="date"]{ max-width: 170px;}
+    button { background: #2563eb; color: #fff; font-weight: bold; border: none; cursor: pointer; transition:.12s;}
+    button:hover { background: #1d4ed8;}
+    .btn-excluir { background: #e11d48; color: #fff; border:none; border-radius:6px; padding:3px 10px; margin-left:6px; font-size:0.93em;}
+    .btn-excluir:hover { background: #b91c1c;}
+    .export-btn { margin: 8px 0 16px 0; background: #10b981; }
+    .export-btn:hover { background: #059669;}
+    .row { display: flex; gap: 14px;}
+    .row > * { flex: 1;}
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; background: #fff; border-radius: 12px; overflow:hidden; }
+    th, td { border: 1px solid #d1d5db; padding: 6px 8px; text-align: center; }
+    th { background: #f1f5f9;}
+    .escala { display: flex; gap:6px; margin-bottom: 4px;}
+    .escala input[type="radio"] { display:none; }
+    .escala label {
+      flex:1;
+      padding: 7px 2px 7px 2px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      margin: 0;
+      cursor: pointer;
+      border: 2px solid #e0e0e0;
+      transition: 0.18s;
+      user-select:none;
+    }
+    .escala-hooper-1 { background: #10b981;}
+    .escala-hooper-2 { background: #4ade80;}
+    .escala-hooper-3 { background: #a3e635;}
+    .escala-hooper-4 { background: #fde047; color: #333;}
+    .escala-hooper-5 { background: #fdba74; color: #333;}
+    .escala-hooper-6 { background: #f87171;}
+    .escala-hooper-7 { background: #dc2626;}
+    .escala-pse-1 { background: #10b981;}
+    .escala-pse-2 { background: #22d3ee;}
+    .escala-pse-3 { background: #4ade80;}
+    .escala-pse-4 { background: #bef264; color:#333;}
+    .escala-pse-5 { background: #fde047; color: #333;}
+    .escala-pse-6 { background: #fdba74; color: #333;}
+    .escala-pse-7 { background: #fbbf24; color: #333;}
+    .escala-pse-8 { background: #f87171;}
+    .escala-pse-9 { background: #dc2626;}
+    .escala-pse-10 { background: #991b1b;}
+    .escala input[type="radio"]:checked + label {
+      border: 2.5px solid #2563eb;
+      transform: scale(1.07);
+      box-shadow:0 1px 6px #0002;
+      z-index: 3;
+    }
+    .escala-legenda { display: flex; justify-content: space-between; font-size: 0.90em; margin-bottom: 9px; margin-top:-4px;}
+    .escala-legenda span{ color: #222; font-weight: 500; }
+    .poweredby {
+      position: fixed; left:0; bottom:0; width: 100%; background: #f1f5f9;
+      color:#3b82f6; font-size: 1em; padding: 13px 0 7px 0; text-align: center; font-weight: 600; letter-spacing: 0.02em; z-index:99;
+      border-top: 1.5px solid #cbd5e1;
+    }
+    @media (max-width: 600px){
+      .content { padding: 12px 1vw 65px 1vw;}
+      .field-block {padding:9px 5px 3px 5px;}
+      .escala label{font-size:0.93em; padding:7px 0;}
+      th, td { font-size: 0.94em;}
+      .poweredby { font-size: 0.98em;}
+    }
+  </style>
+</head>
+<body>
+<div class="tabs">
+  <div class="tab active" data-tab="cadastro">Cadastro de Atletas</div>
+  <div class="tab" data-tab="prontidao">Prontidão (Pré)</div>
+  <div class="tab" data-tab="carga">Carga (Pós)</div>
+  <div class="tab" data-tab="dados">Dados Cadastrados</div>
+</div>
+
+<div class="content tab-content" id="cadastro">
+  <form id="formAtleta">
+    <div class="field-block">
+      <label>Nome</label>
+      <input id="nome" required="" type="text"/>
+      <div class="row">
+        <div>
+          <label>Idade</label>
+          <input id="idade" max="99" min="5" required="" type="number"/>
+        </div>
+        <div>
+          <label>Posição</label>
+          <select id="posicao" required="">
+            <option value="">Selecione</option>
+            <option>Goleiro</option>
+            <option>Defesa</option>
+            <option>Meio-campo</option>
+            <option>Ataque</option>
+          </select>
+        </div>
+      </div>
+      <label>Categoria</label>
+      <input id="categoria" placeholder="Ex: Sub-15, Adulto" required="" type="text"/>
+      <label>Modalidade</label>
+      <input id="modalidade" required="" type="text"/>
+      <button style="margin-top:10px;" type="submit">Cadastrar Atleta</button>
+    </div>
+  </form>
+  <div class="field-block">
+    <label style="font-size:1.1em; color:#2563eb;">Atletas Cadastrados</label>
+    <table id="tableAtletas"></table>
+  </div>
+</div>
+
+<div class="content tab-content" id="prontidao" style="display:none">
+  <form id="formProntidao" onsubmit="salvarProntidao(event); return false;">
+    <div class="field-block">
+      <label style="font-size:1.1em; color:#2563eb;">Coleta de Prontidão (Pré)</label>
+      <label>Atleta</label>
+      <select id="prontidao-atleta" required=""></select>
+      <div class="row">
+        <div>
+          <label>Data</label>
+          <input id="prontidao-data" required="" type="date"/>
+        </div>
+      </div>
+      <div>
+        <label>Sono</label>
+        <div class="escala" data-name="sono" id="escala-sono"></div>
+        <div class="escala-legenda"><span>1 - Muito Bom</span><span>7 - Muito Ruim</span></div>
+      </div>
+      <div>
+        <label>Estresse</label>
+        <div class="escala" data-name="estresse" id="escala-estresse"></div>
+        <div class="escala-legenda"><span>1 - Muito Baixo</span><span>7 - Muito Alto</span></div>
+      </div>
+      <div>
+        <label>Fadiga</label>
+        <div class="escala" data-name="fadiga" id="escala-fadiga"></div>
+        <div class="escala-legenda"><span>1 - Muito Leve</span><span>7 - Muito Cansado</span></div>
+      </div>
+      <div>
+        <label>Dor Muscular</label>
+        <div class="escala" data-name="dor" id="escala-dor"></div>
+        <div class="escala-legenda"><span>1 - Sem dor</span><span>7 - Muita dor</span></div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Salto (cm)</label>
+          <input id="salto" max="500" min="0" type="number"/>
+        </div>
+        <div>
+          <label>Prontidão VFC</label>
+          <input id="vfc" max="500" min="0" type="number"/>
+        </div>
+      </div>
+      <button style="margin-top:8px;" type="submit">Salvar Prontidão</button>
+    </div>
+  </form>
+  <div class="field-block">
+    <label style="font-size:1.1em; color:#2563eb;">Últimos Registros</label>
+    <table id="tableProntidao"></table>
+  </div>
+</div>
+
+<div class="content tab-content" id="carga" style="display:none">
+  <form id="formCarga" onsubmit="salvarCarga(event); return false;">
+    <div class="field-block">
+      <label style="font-size:1.1em; color:#2563eb;">Coleta de Carga (Pós)</label>
+      <label>Atleta</label>
+      <select id="carga-atleta" required=""></select>
+      <div class="row">
+        <div>
+          <label>Data</label>
+          <input id="carga-data" required="" type="date"/>
+        </div>
+      </div>
+      <label>PSE</label>
+      <div class="escala" id="escala-pse"></div>
+      <div class="escala-legenda">
+        <span>1 - Muito Leve</span>
+        <span>10 - Extremo</span>
+      </div>
+      <div class="row">
+        <div>
+          <label>Tempo (min)</label>
+          <input id="tempo" max="500" min="1" type="number"/>
+        </div>
+        <div>
+          <label>Qualidade do Treino/Jogo</label>
+          <select id="qualidade">
+            <option value="">Selecione</option>
+            <option value="1">Ruim</option>
+            <option value="2">Regular</option>
+            <option value="3">Bom</option>
+            <option value="4">Muito Bom</option>
+            <option value="5">Excelente</option>
+          </select>
+        </div>
+      </div>
+      <button style="margin-top:8px;" type="submit">Salvar Carga</button>
+    </div>
+  </form>
+  <div class="field-block">
+    <label style="font-size:1.1em; color:#2563eb;">Últimos Registros</label>
+    <table id="tableCarga"></table>
+  </div>
+</div>
+
+<div class="content tab-content" id="dados" style="display:none">
+  <div class="field-block">
+    <label style="font-size:1.1em; color:#2563eb;">Atletas</label>
+    <table id="dadosAtletas"></table>
+  </div>
+  <div class="field-block">
+    <label style="font-size:1.1em; color:#2563eb;">Prontidão</label>
+    <table id="dadosProntidao"></table>
+  </div>
+  <div class="field-block">
+    <label style="font-size:1.1em; color:#2563eb;">Carga</label>
+    <table id="dadosCarga"></table>
+  </div>
+</div>
+<div class="poweredby">
+  Powered by Ciente - Inteligência Esportiva
+</div>
+
+<!-- Escalas, selects e renderização -->
+<script>
+function renderEscala(id, classeBase, max, name) {
+  const el = document.getElementById(id);
+  el.innerHTML = "";
+  for (let i = 1; i <= max; i++) {
+    const inputId = id + "-opt" + i;
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = name;
+    radio.id = inputId;
+    radio.value = i;
+
+    const label = document.createElement("label");
+    label.htmlFor = inputId;
+    label.textContent = i;
+    label.className = `${classeBase}-${i}`;
+
+    el.appendChild(radio);
+    el.appendChild(label);
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  renderEscala("escala-sono", "escala-hooper", 7, "sono");
+  renderEscala("escala-estresse", "escala-hooper", 7, "estresse");
+  renderEscala("escala-fadiga", "escala-hooper", 7, "fadiga");
+  renderEscala("escala-dor", "escala-hooper", 7, "dor");
+});
+function renderEscalaPSE() {
+  const el = document.getElementById("escala-pse");
+  if (!el) return;
+  el.innerHTML = "";
+  for (let i = 1; i <= 10; i++) {
+    const inputId = "pse-opt" + i;
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "pse";
+    radio.id = inputId;
+    radio.value = i;
+
+    const label = document.createElement("label");
+    label.htmlFor = inputId;
+    label.textContent = i;
+    label.className = `escala-pse-${i}`;
+    el.appendChild(radio);
+    el.appendChild(label);
+  }
+}
+document.addEventListener("DOMContentLoaded", renderEscalaPSE);
+
+function renderAtletas() {
+  const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  let t = '<tr><th>Nome</th><th>Idade</th><th>Posição</th><th>Categoria</th><th>Modalidade</th><th>Ações</th></tr>';
+  atletas.forEach((a, i) => t += `<tr>
+    <td>${a.nome}</td>
+    <td>${a.idade}</td>
+    <td>${a.posicao}</td>
+    <td>${a.categoria || ""}</td>
+    <td>${a.modalidade}</td>
+    <td><button class="btn-excluir" onclick="excluirAtleta(${i})">Excluir</button></td>
+  </tr>`);
+  document.getElementById('tableAtletas').innerHTML = t;
+  document.getElementById('dadosAtletas').innerHTML = t;
+  ['prontidao-atleta','carga-atleta'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '<option value="">Selecione</option>' + atletas.map((a, i) => `<option value="${i}">${a.nome}</option>`).join('');
+  });
+}
+function excluirAtleta(index) {
+  const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  atletas.splice(index, 1);
+  localStorage.setItem("atletas", JSON.stringify(atletas));
+  renderAtletas();
+}
+document.addEventListener("DOMContentLoaded", renderAtletas);
+</script>
+
+<!-- Cadastro de atleta -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("formAtleta").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const nome = document.getElementById("nome").value;
+    const idade = parseInt(document.getElementById("idade").value);
+    const posicao = document.getElementById("posicao").value;
+    const categoria = document.getElementById("categoria").value;
+    const modalidade = document.getElementById("modalidade").value;
+
+    const atleta = { nome, idade, posicao, categoria, modalidade };
+    const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+    atletas.push(atleta);
+    localStorage.setItem("atletas", JSON.stringify(atletas));
+    renderAtletas();
+    alert("Atleta cadastrado com sucesso.");
+    this.reset();
+  });
+});
+</script>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDsoutLk5gmxq5zlu548HWFrox37u1zrxk",
+  authDomain: "appintegrado-ciente.firebaseapp.com",
+  projectId: "appintegrado-ciente",
+  storageBucket: "appintegrado-ciente.appspot.com",
+  messagingSenderId: "487559108410",
+  appId: "1:487559108410:web:08868011454e609ee52203"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
+<!-- Função para salvar Prontidão (com salto/vfc null) -->
+<script>
+function salvarProntidao(event) {
+  event.preventDefault();
+
+  const atletaIndex = document.getElementById("prontidao-atleta").value;
+  const data = document.getElementById("prontidao-data").value;
+  const sono = parseInt(document.querySelector('input[name="sono"]:checked')?.value || 0);
+  const estresse = parseInt(document.querySelector('input[name="estresse"]:checked')?.value || 0);
+  const fadiga = parseInt(document.querySelector('input[name="fadiga"]:checked')?.value || 0);
+  const dor = parseInt(document.querySelector('input[name="dor"]:checked')?.value || 0);
+
+  // AJUSTE: Salto e VFC como null se vazio
+  let saltoInput = document.getElementById("salto").value;
+  let vfcInput = document.getElementById("vfc").value;
+  const salto = saltoInput === "" ? null : parseFloat(saltoInput);
+  const vfc = vfcInput === "" ? null : parseFloat(vfcInput);
+
+  const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  const atleta = atletas[atletaIndex];
+
+  if (!atleta || !data || isNaN(sono) || isNaN(estresse) || isNaN(fadiga) || isNaN(dor)) {
+    alert("Preencha todos os campos obrigatórios.");
+    return false;
+  }
+
+  // calcular semana do ano
+  const dataObj = new Date(data);
+  const primeiroDiaDoAno = new Date(dataObj.getFullYear(), 0, 1);
+  const dias = Math.floor((dataObj - primeiroDiaDoAno) / (24 * 60 * 60 * 1000));
+  const semana = Math.ceil((dias + primeiroDiaDoAno.getDay() + 1) / 7);
+
+  const registro = {
+    nome_atleta: atleta.nome || "",
+    atleta: atletaIndex,
+    data: data,
+    sono: sono,
+    estresse: estresse,
+    fadiga: fadiga,
+    dor: dor,
+    hooper_score: sono + estresse + fadiga + dor,
+    salto: salto,
+    vfc: vfc,
+    equipe_id: atleta.categoria || "",
+    posicao_grupo: atleta.posicao || "",
+    semana_id: "S" + semana,
+  };
+
+  // Salva localmente
+  const registros = JSON.parse(localStorage.getItem("prontidao") || "[]");
+  registros.push(registro);
+  localStorage.setItem("prontidao", JSON.stringify(registros));
+
+  // Salva no Firebase
+  db.collection("prontidao").add(registro).then(() => {
+    alert("Prontidão salva localmente e enviada ao Firebase com sucesso!");
+    document.getElementById("formProntidao").reset();
+    document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
+    renderProntidao();
+  }).catch((e) => {
+    alert("Erro ao enviar ao Firebase: " + e.message + ". Os dados foram salvos localmente.");
+    renderProntidao();
+  });
+}
+</script>
+
+<!-- Função para salvar Carga -->
+<script>
+function salvarCarga(event) {
+  event.preventDefault();
+
+  const atletaIndex = document.getElementById("carga-atleta").value;
+  const pse = parseInt(document.querySelector("input[name='pse']:checked")?.value);
+  const tempo = parseInt(document.getElementById("tempo").value);
+  const dataStr = document.getElementById("carga-data").value;
+
+  const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  const atleta = atletas[atletaIndex];
+
+  if (!atleta || !pse || !tempo || !dataStr) {
+    alert("Preencha todos os campos obrigatórios.");
+    return false;
+  }
+
+  // calcular semana do ano
+  const dataObj = new Date(dataStr);
+  const primeiroDiaDoAno = new Date(dataObj.getFullYear(), 0, 1);
+  const dias = Math.floor((dataObj - primeiroDiaDoAno) / (24 * 60 * 60 * 1000));
+  const semana = Math.ceil((dias + primeiroDiaDoAno.getDay() + 1) / 7);
+
+  const registro = {
+    nome_atleta: atleta.nome || "",
+    atleta: atletaIndex,
+    pse: pse,
+    tempo: tempo,
+    data: dataStr,
+    equipe_id: atleta.categoria || "",
+    posicao_grupo: atleta.posicao || "",
+    semana_id: "S" + semana,
+  };
+
+  // Salva localmente
+  const registros = JSON.parse(localStorage.getItem("carga") || "[]");
+  registros.push(registro);
+  localStorage.setItem("carga", JSON.stringify(registros));
+
+  // Salva no Firebase
+  db.collection("carga").add(registro).then(() => {
+    alert("Carga salva localmente e enviada ao Firebase com sucesso!");
+    document.getElementById("formCarga").reset();
+    document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
+    renderCarga();
+  }).catch((e) => {
+    alert("Erro ao enviar ao Firebase: " + e.message + ". Os dados foram salvos localmente.");
+    renderCarga();
+  });
+}
+</script>
+
+<!-- Renderização dos registros de Prontidão e Carga -->
+<script>
+function renderProntidao() {
+  const registros = JSON.parse(localStorage.getItem("prontidao") || "[]");
+  let t = "<tr><th>Atleta</th><th>Data</th><th>Hooper</th><th>Salto</th><th>VFC</th></tr>";
+  registros.slice(-10).reverse().forEach(r => {
+    t += `<tr>
+      <td>${r.nome_atleta || ""}</td>
+      <td>${r.data || ""}</td>
+      <td>${typeof r.hooper_score === "number" ? r.hooper_score : ""}</td>
+      <td>${r.salto !== null && r.salto !== undefined ? r.salto : ""}</td>
+      <td>${r.vfc !== null && r.vfc !== undefined ? r.vfc : ""}</td>
+    </tr>`;
+  });
+  if(document.getElementById("tableProntidao")) document.getElementById("tableProntidao").innerHTML = t;
+  if(document.getElementById("dadosProntidao")) document.getElementById("dadosProntidao").innerHTML = t;
+}
+
+function renderCarga() {
+  const registros = JSON.parse(localStorage.getItem("carga") || "[]");
+  let t = "<tr><th>Atleta</th><th>Data</th><th>PSE</th><th>Tempo</th></tr>";
+  registros.slice(-10).reverse().forEach(r => {
+    t += `<tr>
+      <td>${r.nome_atleta || ""}</td>
+      <td>${r.data || ""}</td>
+      <td>${typeof r.pse === "number" ? r.pse : ""}</td>
+      <td>${typeof r.tempo === "number" ? r.tempo : ""}</td>
+    </tr>`;
+  });
+  if(document.getElementById("tableCarga")) document.getElementById("tableCarga").innerHTML = t;
+  if(document.getElementById("dadosCarga")) document.getElementById("dadosCarga").innerHTML = t;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderProntidao();
+  renderCarga();
+});
+</script>
+
+<!-- Data automática ao abrir abas -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if(document.getElementById("prontidao-data")){
+    document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
+  }
+  if(document.getElementById("carga-data")){
+    document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
+  }
+});
+</script>
+
+<!-- Alternância entre abas: sempre o ÚLTIMO SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tab-content");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      contents.forEach(c => c.style.display = "none");
+      tab.classList.add("active");
+      const activeTab = tab.getAttribute("data-tab");
+      document.getElementById(activeTab).style.display = "block";
+      // Preenche data automática nas abas corretas
+      if(activeTab === "prontidao" && document.getElementById("prontidao-data")){
+        document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
+      }
+      if(activeTab === "carga" && document.getElementById("carga-data")){
+        document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
+      }
+      // Atualiza os registros ao abrir as abas
+      if(activeTab === "prontidao") renderProntidao();
+      if(activeTab === "carga") renderCarga();
+      if(activeTab === "dados") {
+        renderAtletas();
+        renderProntidao();
+        renderCarga();
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
