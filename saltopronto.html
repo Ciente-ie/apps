@@ -3,7 +3,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medidor de Saltos</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js">
+function plotarFinal() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.moveTo(0, 200 - dados[0]);
+  for (let i = 1; i < dados.length; i++) {
+    ctx.lineTo(i * (400 / dados.length), 200 - dados[i]);
+  }
+  ctx.stroke();
+  ctx.font = "14px Arial";
+  ctx.fillText("Aceleração (m/s²)", 10, 20);
+}
+
+</script>
   <style>
     body { font-family: Arial, sans-serif; background: #f0f4f8; color: #222; text-align: center; padding: 20px; }
     .container { max-width: 400px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px #0002; padding: 32px 12px; margin-top: 24px;}
@@ -32,6 +45,8 @@
       <canvas id="grafico"></canvas>
     </div>
   </div>  <script>
+let picosAceleracao = [];
+let acelData = [];
     let tipoTeste = 1;
     let fator = parseFloat(localStorage.getItem('fatorCorrecao')) || 1.53;
     document.getElementById("fatorInput").value = fator;
@@ -80,21 +95,13 @@
       }
     });
 
-    
-function plotar(valor) {
-  dados.push(valor);
-  if (dados.length > 50) dados.shift();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-  ctx.moveTo(0, 200 - dados[0]);
-  for (let i = 1; i < dados.length; i++) {
-    ctx.lineTo(i * (400 / 50), 200 - dados[i]);
-  }
-  ctx.stroke();
-  ctx.font = "14px Arial";
-  ctx.fillText("Aceleração (m/s²)", 10, 20);
-}
-
+    function plotar(valor) {
+      chart.data.labels.push('');
+      chart.data.datasets[0].data.push(valor);
+      if (chart.data.labels.length > 100) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
       chart.update();
     }
 
@@ -190,44 +197,56 @@ function cancelarTeste() {
     }
 
     function capturarSalto(callback) {
-      let saltou = false;
-      let tDecolagem = 0;
+  let saltou = false;
+  let tDecolagem = 0;
+  let aceleracoesDuranteSalto = [];
 
-      function motionHandler(e) {
-        const acc = e.accelerationIncludingGravity;
-        const now = Date.now();
-        const modulo = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+  function motionHandler(e) {
+    const acc = e.accelerationIncludingGravity;
+    const now = Date.now();
+    const modulo = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
 
-        if (tipoTeste === 1) plotar(modulo);
-
-        if (!saltou && modulo < 3) {
-          saltou = true;
-          tDecolagem = now;
-          statusDiv.innerText = 'No ar!';
-        }
-
-        if (saltou && modulo > 10) {
-          const tPouso = now;
-          const tempoVoo = (tPouso - tDecolagem) / 1000;
-          const altura = (9.81 * tempoVoo * tempoVoo) / 8 * 100 * fator;
-          statusDiv.innerText = 'Salto registrado!';
-          window.removeEventListener('devicemotion', motionHandler);
-          if (callback) callback(altura, tempoVoo);
-        }
-      }
-
-      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        DeviceMotionEvent.requestPermission().then(permissionState => {
-          if (permissionState === 'granted') {
-            window.addEventListener('devicemotion', motionHandler);
-          } else {
-            alert('Permissão negada para acessar o acelerômetro.');
-          }
-        }).catch(console.error);
-      } else {
-        window.addEventListener('devicemotion', motionHandler);
-      }
+    if (!saltou && modulo < 3) {
+      saltou = true;
+      tDecolagem = now;
+      aceleracoesDuranteSalto = [];
+      statusDiv.innerText = 'No ar!';
     }
-  </script>
-</body>
+
+    if (saltou) {
+      aceleracoesDuranteSalto.push(modulo);
+    }
+
+    if (saltou && modulo > 10) {
+      const tPouso = now;
+      const tempoVoo = (tPouso - tDecolagem) / 1000;
+      const altura = (9.81 * tempoVoo * tempoVoo) / 8 * 100 * fator;
+      statusDiv.innerText = 'Salto registrado!';
+      window.removeEventListener('devicemotion', motionHandler);
+
+      // Calcular pico de aceleração e salvar
+      if (tipoTeste === 10) {
+        let pico = Math.max(...aceleracoesDuranteSalto);
+        picosAceleracao.push(pico);
+      }
+
+      if (callback) callback(altura, tempoVoo);
+    }
+  }
+
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') {
+          window.addEventListener('devicemotion', motionHandler);
+        } else {
+          alert('Permissão negada para acessar o acelerômetro.');
+        }
+      }).catch(console.error);
+  } else {
+    window.addEventListener('devicemotion', motionHandler);
+  }
+}
+
+
 </html>
