@@ -80,13 +80,21 @@
       }
     });
 
-    function plotar(valor) {
-      chart.data.labels.push('');
-      chart.data.datasets[0].data.push(valor);
-      if (chart.data.labels.length > 100) {
-        chart.data.labels.shift();
-        chart.data.datasets[0].data.shift();
-      }
+    
+function plotar(valor) {
+  dados.push(valor);
+  if (dados.length > 50) dados.shift();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.moveTo(0, 200 - dados[0]);
+  for (let i = 1; i < dados.length; i++) {
+    ctx.lineTo(i * (400 / 50), 200 - dados[i]);
+  }
+  ctx.stroke();
+  ctx.font = "14px Arial";
+  ctx.fillText("Aceleração (m/s²)", 10, 20);
+}
+
       chart.update();
     }
 
