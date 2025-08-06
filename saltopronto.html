@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,9 +31,7 @@
     <div id="graficoContainer">
       <canvas id="grafico"></canvas>
     </div>
-  </div>
-
-  <script>
+  </div>  <script>
     let tipoTeste = 1;
     let fator = parseFloat(localStorage.getItem('fatorCorrecao')) || 1.53;
     document.getElementById("fatorInput").value = fator;
@@ -181,22 +178,46 @@
       proximoSalto();
     }
 
-    function capturarSalto(callback) {
-      let saltou = false;
-      let tDecolagem = 0;
+    
+function capturarSalto(callback) {
+  let saltou = false;
+  let tDecolagem = 0;
 
-      function motionHandler(e) {
-        const acc = e.accelerationIncludingGravity;
-        const now = Date.now();
-        const modulo = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+  function motionHandler(e) {
+    const acc = e.accelerationIncludingGravity;
+    const now = Date.now();
+    const modulo = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+    if (tipoTeste === 1 || tipoTeste === 10) plotar(modulo);
 
-        if (tipoTeste === 1) plotar(modulo);
+    if (!saltou && modulo < 3) {
+      saltou = true;
+      tDecolagem = now;
+      statusDiv.innerText = 'No ar!';
+    }
 
-        if (!saltou && modulo < 3) {
-          saltou = true;
-          tDecolagem = now;
-          statusDiv.innerText = 'No ar!';
-        }
+    if (saltou && modulo > 10) {
+      const tPouso = now;
+      const tempoVoo = (tPouso - tDecolagem) / 1000;
+      const altura = (9.81 * tempoVoo * tempoVoo) / 8 * 100 * fator;
+      statusDiv.innerText = 'Salto registrado!';
+      window.removeEventListener('devicemotion', motionHandler);
+      if (callback) callback(altura, tempoVoo);
+    }
+  }
+
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(permissionState => {
+      if (permissionState === 'granted') {
+        window.addEventListener('devicemotion', motionHandler);
+      } else {
+        alert('Permissão negada para acessar o acelerômetro.');
+      }
+    }).catch(console.error);
+  } else {
+    window.addEventListener('devicemotion', motionHandler);
+  }
+}
+
 
         if (saltou && modulo > 10) {
           const tPouso = now;
@@ -221,5 +242,5 @@
       }
     }
   </script>
-</body>
-</html>
+  </body>
+  </html>
