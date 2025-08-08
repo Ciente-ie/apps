@@ -95,15 +95,15 @@
   <form id="formAtleta">
     <div class="field-block">
       <label>Nome</label>
-      <input id="nome" required type="text"/>
+      <input id="nome" required="" type="text"/>
       <div class="row">
         <div>
           <label>Idade</label>
-          <input id="idade" min="5" max="99" required type="number"/>
+          <input id="idade" max="99" min="5" required="" type="number"/>
         </div>
         <div>
           <label>Posição</label>
-          <select id="posicao" required>
+          <select id="posicao" required="">
             <option value="">Selecione</option>
             <option>Goleiro</option>
             <option>Defesa</option>
@@ -113,9 +113,9 @@
         </div>
       </div>
       <label>Categoria</label>
-      <input id="categoria" placeholder="Ex: Sub-15, Adulto" required type="text"/>
+      <input id="categoria" placeholder="Ex: Sub-15, Adulto" required="" type="text"/>
       <label>Modalidade</label>
-      <input id="modalidade" required type="text"/>
+      <input id="modalidade" required="" type="text"/>
       <button style="margin-top:10px;" type="submit">Cadastrar Atleta</button>
     </div>
   </form>
@@ -130,41 +130,41 @@
     <div class="field-block">
       <label style="font-size:1.1em; color:#2563eb;">Coleta de Prontidão (Pré)</label>
       <label>Atleta</label>
-      <select id="prontidao-atleta" required></select>
+      <select id="prontidao-atleta" required=""></select>
       <div class="row">
         <div>
           <label>Data</label>
-          <input id="prontidao-data" required type="date"/>
+          <input id="prontidao-data" required="" type="date"/>
         </div>
       </div>
       <div>
         <label>Sono</label>
-        <div class="escala" id="escala-sono" data-name="sono"></div>
+        <div class="escala" data-name="sono" id="escala-sono"></div>
         <div class="escala-legenda"><span>1 - Muito Bom</span><span>7 - Muito Ruim</span></div>
       </div>
       <div>
         <label>Estresse</label>
-        <div class="escala" id="escala-estresse" data-name="estresse"></div>
+        <div class="escala" data-name="estresse" id="escala-estresse"></div>
         <div class="escala-legenda"><span>1 - Muito Baixo</span><span>7 - Muito Alto</span></div>
       </div>
       <div>
         <label>Fadiga</label>
-        <div class="escala" id="escala-fadiga" data-name="fadiga"></div>
+        <div class="escala" data-name="fadiga" id="escala-fadiga"></div>
         <div class="escala-legenda"><span>1 - Muito Leve</span><span>7 - Muito Cansado</span></div>
       </div>
       <div>
         <label>Dor Muscular</label>
-        <div class="escala" id="escala-dor" data-name="dor"></div>
+        <div class="escala" data-name="dor" id="escala-dor"></div>
         <div class="escala-legenda"><span>1 - Sem dor</span><span>7 - Muita dor</span></div>
       </div>
       <div class="row">
         <div>
           <label>Salto (cm)</label>
-          <input id="salto" type="number" min="0" max="500"/>
+          <input id="salto" max="500" min="0" type="number"/>
         </div>
         <div>
           <label>Prontidão VFC</label>
-          <input id="vfc" type="number" min="0" max="500"/>
+          <input id="vfc" max="500" min="0" type="number"/>
         </div>
       </div>
       <button style="margin-top:8px;" type="submit">Salvar Prontidão</button>
@@ -181,11 +181,11 @@
     <div class="field-block">
       <label style="font-size:1.1em; color:#2563eb;">Coleta de Carga (Pós)</label>
       <label>Atleta</label>
-      <select id="carga-atleta" required></select>
+      <select id="carga-atleta" required=""></select>
       <div class="row">
         <div>
           <label>Data</label>
-          <input id="carga-data" required type="date"/>
+          <input id="carga-data" required="" type="date"/>
         </div>
       </div>
       <label>PSE</label>
@@ -197,7 +197,7 @@
       <div class="row">
         <div>
           <label>Tempo (min)</label>
-          <input id="tempo" type="number" min="1" max="500"/>
+          <input id="tempo" max="500" min="1" type="number"/>
         </div>
         <div>
           <label>Qualidade do Treino/Jogo</label>
@@ -287,79 +287,14 @@ function renderEscalaPSE() {
   }
 }
 document.addEventListener("DOMContentLoaded", renderEscalaPSE);
-</script>
 
-<!-- SEED de atletas (auto-popula se estiver vazio; faz merge sem duplicar) -->
-<script>
-// ===== LISTA GERADA A PARTIR DO SEU EXCEL =====
-const SEED_ATLETAS = [
-  {"nome":"Kaio Victor Batista Santos","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Gabriel paulo Souza","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Carlos Eduardo Durigan Christoforo","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Danilo Cardoso Borges","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Carlos Emanuel Oliveira de Souza","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Luis Fernando Orlando Ramim","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Murilo reis perotti","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Heitor Casagrande cosenza","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Pedro Henrique Oliveira Fraga Braz","idade":15,"posicao":"Goleiro","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Vitor isla Marques","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Rafael Amorim Herreira","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Lucas Eduardo Valério","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"João Vitor de Oliveira","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Samuel Roza dos Santos","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Matheus Henrique citadin","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"José Antônio Oliveira Nunes","idade":15,"posicao":"Goleiro","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"João Vitor Cercal Ferrao","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"André Luís Silva de Carvalho","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Davi santos piza","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"joao vitor nardi","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Arthur zuin Cassiano","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Eduardo dos Santos Cassiano","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Bianca Maciel de Souza","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Victor Hugo Alvaristo Inácio","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Luis Otávio Pasto Dalmônico","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Guilherme Henrique Mecca Delavaro","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"João Pedro da Silva","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"jhonatan Gabriel serafim","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Gustavo Henrique Machado Pinho","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Enzo Miguel Marques de Sousa","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Hector Xavier Roza dos Santos","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"GABRIEL CECCARELLI FERREIRA DE TOLEDO","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Augusto thomas scheffer","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Pedro Henrique Jacon","idade":15,"posicao":"Defesa","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Henrique Sabadin Limiro","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Emanuelly Estevan de Barros","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Nicolas Eduardo David","idade":15,"posicao":"Meio-campo","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Maria Eduarda Rodrigues","idade":15,"posicao":"Ataque","categoria":"sub 15","modalidade":"Futebol"},
-  {"nome":"Moisés Cesar","idade":15,"posicao":"Goleiro","categoria":"sub 15","modalidade":"Futebol"}
-];
-// ===== Funções de seed/merge =====
-function seedAtletasIfNeeded() {
-  try {
-    const atual = JSON.parse(localStorage.getItem("atletas") || "[]");
-    if (!Array.isArray(atual) || atual.length === 0) {
-      localStorage.setItem("atletas", JSON.stringify(SEED_ATLETAS));
-    } else {
-      const nomes = new Set(atual.map(a => (a.nome || "").trim().toLowerCase()));
-      const novos = SEED_ATLETAS.filter(a => !nomes.has((a.nome || "").trim().toLowerCase()));
-      if (novos.length) {
-        localStorage.setItem("atletas", JSON.stringify(atual.concat(novos)));
-      }
-    }
-  } catch (e) {
-    localStorage.setItem("atletas", JSON.stringify(SEED_ATLETAS));
-  }
-}
-</script>
-
-<!-- Render de atletas e selects -->
-<script>
 function renderAtletas() {
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
   let t = '<tr><th>Nome</th><th>Idade</th><th>Posição</th><th>Categoria</th><th>Modalidade</th><th>Ações</th></tr>';
   atletas.forEach((a, i) => t += `<tr>
     <td>${a.nome}</td>
-    <td>${a.idade ?? ""}</td>
+    <td>${a.idade}</td>
     <td>${a.posicao}</td>
     <td>${a.categoria || ""}</td>
     <td>${a.modalidade}</td>
@@ -374,15 +309,12 @@ function renderAtletas() {
 }
 function excluirAtleta(index) {
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
   atletas.splice(index, 1);
   localStorage.setItem("atletas", JSON.stringify(atletas));
   renderAtletas();
 }
-// Garante seed + render ao carregar
-document.addEventListener("DOMContentLoaded", () => {
-  seedAtletasIfNeeded();
-  renderAtletas();
-});
+document.addEventListener("DOMContentLoaded", renderAtletas);
 </script>
 
 <!-- Cadastro de atleta -->
@@ -398,7 +330,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const atleta = { nome, idade, posicao, categoria, modalidade };
     const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
-    atletas.push(atleta);
+    atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
+  atletas.push(atleta);
     localStorage.setItem("atletas", JSON.stringify(atletas));
     renderAtletas();
     alert("Atleta cadastrado com sucesso.");
@@ -435,12 +368,14 @@ function salvarProntidao(event) {
   const fadiga = parseInt(document.querySelector('input[name="fadiga"]:checked')?.value || 0);
   const dor = parseInt(document.querySelector('input[name="dor"]:checked')?.value || 0);
 
+  // AJUSTE: Salto e VFC como null se vazio
   let saltoInput = document.getElementById("salto").value;
   let vfcInput = document.getElementById("vfc").value;
   const salto = saltoInput === "" ? null : parseFloat(saltoInput);
   const vfc = vfcInput === "" ? null : parseFloat(vfcInput);
 
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
   const atleta = atletas[atletaIndex];
 
   if (!atleta || !data || isNaN(sono) || isNaN(estresse) || isNaN(fadiga) || isNaN(dor)) {
@@ -499,6 +434,7 @@ function salvarCarga(event) {
   const dataStr = document.getElementById("carga-data").value;
 
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
   const atleta = atletas[atletaIndex];
 
   if (!atleta || !pse || !tempo || !dataStr) {
@@ -604,12 +540,14 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.classList.add("active");
       const activeTab = tab.getAttribute("data-tab");
       document.getElementById(activeTab).style.display = "block";
+      // Preenche data automática nas abas corretas
       if(activeTab === "prontidao" && document.getElementById("prontidao-data")){
         document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
       }
       if(activeTab === "carga" && document.getElementById("carga-data")){
         document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
       }
+      // Atualiza os registros ao abrir as abas
       if(activeTab === "prontidao") renderProntidao();
       if(activeTab === "carga") renderCarga();
       if(activeTab === "dados") {
@@ -621,5 +559,302 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+<!-- SEED de atletas (lista EXATA da sua planilha, em ordem alfabética) -->
+<script>
+const SEED_ATLETAS = [
+  {
+    "nome": "ARTHUR GUILHERME CAMPOS",
+    "idade": 16,
+    "posicao": "Ataque",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Carlos Eduardo Durigan Christoforo",
+    "idade": 15,
+    "posicao": "Ataque",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Carlos Emanuel Oliveira de Souza",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Celso Ricardo Junior",
+    "idade": 16,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Danilo Cardoso Borges",
+    "idade": 15,
+    "posicao": "Ataque",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Diego Chinellatto Pimentel",
+    "idade": 17,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "ENZO AUGUSTO PAPANDRE",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "FELIPE DE PAULA PADERNA",
+    "idade": 17,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "FELIPE FALCAO BRITO PALHETA",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "GABRIEL CECCARELLI FERREIRA DE TOLEDO",
+    "idade": 17,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Gabriel Guimarães Vicente Ferreira",
+    "idade": 17,
+    "posicao": "Ataque",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Gabriel Henrique de Oliveira Menezes",
+    "idade": 17,
+    "posicao": "Ataque",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Gabriel paulo Souza",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Gustavo pan Ramalho fumis",
+    "idade": 17,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Gustavo Sivieri",
+    "idade": 16,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Heitor Casagrande cosenza",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Joao Paulo Pessoa Antonio",
+    "idade": 15,
+    "posicao": "Meio-campo",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Kaio Victor Batista Santos",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Kenji Ueharo Azano",
+    "idade": 15,
+    "posicao": "Meio-campo",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Leonardo dos Santos Galante de Souza",
+    "idade": 16,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Leonardo Gonçalves dos Santos Basseti",
+    "idade": 17,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Leonardo Marcal",
+    "idade": 17,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Lucas Vinicius Ferreira da Silva",
+    "idade": 17,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Luis Fernando Orlando Ramim",
+    "idade": 15,
+    "posicao": "Ataque",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Luiz Gustavo Godinho",
+    "idade": 17,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Luiz Otávio Santana Miranda Silveira",
+    "idade": 17,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Mateus Bogaz Vessani",
+    "idade": 15,
+    "posicao": "Meio-campo",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Miguel Salgado",
+    "idade": 15,
+    "posicao": "Meio-campo",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Murilo reis perotti",
+    "idade": 15,
+    "posicao": "Defesa",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Nicollas Jose Alves Camilo",
+    "idade": 15,
+    "posicao": "Meio-campo",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Pedro de Oliveira Maria",
+    "idade": 16,
+    "posicao": "Goleiro",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Pedro Henrique Oliveira Fraga Braz",
+    "idade": 15,
+    "posicao": "Goleiro",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Pedro Pelicer",
+    "idade": 17,
+    "posicao": "Ataque",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Pedro Simões Neves Leite",
+    "idade": 16,
+    "posicao": "Ataque",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Rai Pereira Bellão",
+    "idade": 16,
+    "posicao": "Meio-campo",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Renan de Souza Pereira",
+    "idade": 16,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Thayson dos Santos silva",
+    "idade": 16,
+    "posicao": "Defesa",
+    "categoria": "sub 17",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Thiago Irikura da Costa",
+    "idade": 15,
+    "posicao": "Meio-campo",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  },
+  {
+    "nome": "Vitor isla Marques",
+    "idade": 15,
+    "posicao": "Ataque",
+    "categoria": "sub 15",
+    "modalidade": "Futebol"
+  }
+];
+function seedAtletasIfNeeded() {
+  try {
+    const atual = JSON.parse(localStorage.getItem("atletas") || "[]");
+    if (!Array.isArray(atual) || atual.length === 0) {
+      localStorage.setItem("atletas", JSON.stringify(SEED_ATLETAS));
+    } else {
+      const nomes = new Set(atual.map(a => (a.nome || "").trim().toLowerCase()));
+      const novos = SEED_ATLETAS.filter(a => !nomes.has((a.nome || "").trim().toLowerCase()));
+      if (novos.length) {
+        localStorage.setItem("atletas", JSON.stringify(atual.concat(novos)));
+      }
+    }
+  } catch (e) {
+    localStorage.setItem("atletas", JSON.stringify(SEED_ATLETAS));
+  }
+}
+document.addEventListener("DOMContentLoaded", seedAtletasIfNeeded);
+</script>
+
 </body>
 </html>
