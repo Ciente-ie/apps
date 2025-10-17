@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Foco — Ciente IE</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0b1e3d, #142b57);
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    h1 { margin-bottom: 10px; color: #fff; }
+    #legenda {
+      max-width: 600px;
+      margin: 0 auto 15px auto;
+      font-size: 15px;
+      color: #dce3ff;
+      background: rgba(255,255,255,0.1);
+      padding: 12px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: none;
+      margin: 5px;
+    }
+    #areaJogo {
+      width: 100%;
+      height: 420px;
+      max-width: 500px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      color: #111;
+      font-size: 48px;
+      line-height: 1;
+    }
+    .bola {
+      position: absolute;
+      font-size: 50px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s ease;
+    }
+    #iniciar {
+      background-color: #102853;
+      color: white;
+      cursor: pointer;
+    }
+    #iniciar:hover { background-color: #1e3a8a; }
+    #resultado {
+      margin-top: 20px;
+      font-size: 17px;
+      color: #fff;
+    }
+    #timer {
+      font-size: 18px;
+      margin-top: 5px;
+      color: #dce3ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Jogo de Foco</h1>
+  <div id="legenda">
+    ⚙️ <b>Instruções:</b> Escolha sua modalidade abaixo. Durante <b>30 segundos</b>, bolas de diferentes esportes cairão aleatoriamente.<br>
+    Toque <b>apenas nas bolas da sua modalidade</b> antes que toquem o chão.<br>
+    A velocidade aumentará aos <b>10s e 20s</b>. O sistema calculará sua <b>precisão</b> e o <b>tempo médio de reação</b>.
+  </div>
+
+  <select id="modalidade">
+    <option value="">Selecione sua modalidade</option>
+    <option value="🎾">🎾 Tênis</option>
+    <option value="⚽">⚽ Futebol</option>
+    <option value="🏀">🏀 Basquete</option>
+    <option value="🏐">🏐 Vôlei</option>
+  </select>
+  <button id="iniciar">▶️ Iniciar</button>
+
+  <div id="timer">⏱️ Tempo: 30s</div>
+  <div id="areaJogo"></div>
+  <div id="resultado"></div>
+
+  <script>
+    const bolas = ["🎾","⚽","🏀","🏐"];
+    const area = document.getElementById("areaJogo");
+    const btn = document.getElementById("iniciar");
+    const resultado = document.getElementById("resultado");
+    const select = document.getElementById("modalidade");
+    const timerDisplay = document.getElementById("timer");
+
+    let alvo = null, ativo = false;
+    let acertos = 0, erros = 0, tempos = [];
+    let inicioJogo = 0;
+    let tempoRestante = 30;
+    let intervalTimer = null;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function escolherBola() {
+      // 50% chance de ser a bola do alvo, 50% de ser qualquer outra
+      if (Math.random() < 0.5) return alvo;
+      let outras = bolas.filter(b => b !== alvo);
+      return outras[Math.floor(Math.random() * outras.length)];
+    }
+
+    function criarBola() {
+      if (!ativo) return;
+      const tipo = escolherBola();
+      const bola = document.createElement("div");
+      bola.className = "bola";
+      bola.textContent = tipo;
+      bola.style.left = random(5, 85) + "%";
+      bola.style.top = "-60px";
+      bola.dataset.tipo = tipo;
+      bola.dataset.tempo = performance.now();
+      bola.dataset.ativo = "true"; // flag ativa enquanto válida
+
+      bola.onclick = () => {
+        if (bola.dataset.ativo !== "true") return; // evita duplo clique
+        bola.dataset.ativo = "false";
+        const tempoReacao = (performance.now() - parseFloat(bola.dataset.tempo)) / 1000;
+        if (tipo === alvo) {
+          acertos++;
+          tempos.push(tempoReacao);
+          piscar("green");
+        } else {
+          erros++;
+          piscar("red");
+        }
+        bola.remove();
+      };
+
+      area.appendChild(bola);
+      animarBola(bola);
+    }
+
+    function animarBola(bola) {
+      let duracaoBase = 3000;
+      const tempoDecorrido = (performance.now() - inicioJogo) / 1000;
+      if (tempoDecorrido > 20) duracaoBase *= 0.6; // +40% velocidade
+      else if (tempoDecorrido > 10) duracaoBase *= 0.8; // +20% velocidade
+
+      const start = performance.now();
+      function queda(atual) {
+        const elapsed = atual - start;
+        const progresso = elapsed / duracaoBase;
+        bola.style.top = progresso * (area.clientHeight - 60) + "px";
+
+        if (progresso < 1 && ativo && bola.dataset.ativo === "true") {
+          requestAnimationFrame(queda);
+        } else if (progresso >= 1 && ativo && bola.dataset.ativo === "true") {
+          if (bola.dataset.tipo === alvo) erros++; // só conta erro se era o alvo
+          bola.dataset.ativo = "false";
+          bola.remove();
+        }
+      }
+      requestAnimationFrame(queda);
+    }
+
+    function piscar(cor) {
+      area.style.boxShadow = `0 0 30px ${cor}`;
+      setTimeout(() => (area.style.boxShadow = "0 0 20px rgba(0,0,0,0.3)"), 150);
+    }
+
+    function iniciarJogo() {
+      alvo = select.value;
+      if (!alvo) return alert("Selecione sua modalidade!");
+      btn.disabled = true;
+      select.disabled = true;
+      resultado.innerHTML = "";
+      acertos = 0; erros = 0; tempos = [];
+      ativo = true;
+      inicioJogo = performance.now();
+      tempoRestante = 30;
+      atualizarTimer();
+
+      intervalTimer = setInterval(() => {
+        tempoRestante--;
+        atualizarTimer();
+        if (tempoRestante <= 0) clearInterval(intervalTimer);
+      }, 1000);
+
+      setTimeout(() => {
+        ativo = false;
+        finalizar();
+      }, 30000);
+
+      // mais bolas (intervalo menor)
+      function loopBolas() {
+        if (!ativo) return;
+        criarBola();
+        setTimeout(loopBolas, random(300, 600)); // alta densidade
+      }
+      loopBolas();
+    }
+
+    function atualizarTimer() {
+      timerDisplay.textContent = `⏱️ Tempo: ${tempoRestante}s`;
+    }
+
+    function finalizar() {
+      btn.disabled = false;
+      select.disabled = false;
+      area.innerHTML = "";
+      const total = acertos + erros;
+      const precisao = total ? ((acertos / total) * 100).toFixed(1) : 0;
+      const media = tempos.length ? (tempos.reduce((a,b)=>a+b,0) / tempos.length).toFixed(2) : 0;
+      resultado.innerHTML = `
+        ✅ <b>Jogo finalizado!</b><br>
+        🎯 Acertos: ${acertos} ❌ Erros: ${erros}<br>
+        💯 Precisão: ${precisao}% ⏱️ Tempo médio: ${media}s
+      `;
+    }
+
+    btn.onclick = iniciarJogo;
+  </script>
+</body>
+</html>
