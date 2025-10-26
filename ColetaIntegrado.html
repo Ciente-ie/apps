@@ -4,11 +4,12 @@
 <meta charset="utf-8"/>
 <title>Coleta Esportiva Offline</title>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-    body { font-family: Arial,sans-serif; background: #f7fafd; margin: 0;}
-    .tabs { display: flex; border-bottom: 2px solid #ccc; background: #fff; }
-    .tab { flex: 1; text-align: center; padding: 15px 0; cursor: pointer; font-weight: 600; letter-spacing: 1px;}
-    .tab.active { background: #eff6ff; border-bottom: 3px solid #2563eb; color: #2563eb; }
+    body { font-family: Arial,sans-serif; background: #f7fafd; margin: 0; overflow-x: hidden;}
+    
+    /* REMOVIDO: .tabs (antiga barra de navegação) */
+    
     .content { padding: 20px 4vw 60px 4vw; max-width: 650px; margin: auto; position: relative;}
     .field-block {background: #fff; border-radius: 16px; box-shadow: 0 2px 6px #0001; padding: 16px 10px 8px 10px; margin-bottom: 18px; }
     label { font-weight: bold; margin: 0 0 6px 3px; display: block; color: #222; }
@@ -44,6 +45,7 @@
       transition: 0.18s;
       user-select:none;
     }
+    /* Estilos das escalas... mantidos */
     .escala-hooper-1 { background: #10b981;}
     .escala-hooper-2 { background: #4ade80;}
     .escala-hooper-3 { background: #a3e635;}
@@ -69,6 +71,134 @@
     }
     .escala-legenda { display: flex; justify-content: space-between; font-size: 0.90em; margin-bottom: 9px; margin-top:-4px;}
     .escala-legenda span{ color: #222; font-weight: 500; }
+
+    /* Estilos para a página inicial (Home) */
+    #inicial { text-align: center; padding: 20px 4vw; }
+    
+    /* NOVO: Container Flex para Filtro e Botão */
+    .filter-cadastro-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end; /* Alinha o botão com o input */
+        margin-bottom: 20px;
+    }
+    .filter-cadastro-row > div:first-child {
+        flex-grow: 1; /* Faz o filtro ocupar a maior parte do espaço */
+    }
+
+    /* NOVO: Estilo Compacto do Botão de Cadastro */
+    .btn-cadastro-compact {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 10px 10px; /* Ajusta o padding para ser menor */
+        background: #f97316;
+        border-radius: 10px;
+        font-size: 0.9em; /* Torna o texto menor */
+        white-space: nowrap;
+        height: 44px; /* Garante que tenha a mesma altura que o input com padding */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-cadastro-compact i { margin-right: 5px; }
+    .btn-cadastro-compact:hover { background: #ea580c; }
+    /* REMOVIDO: .btn-cadastro antigo */
+
+
+    .atletas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 15px;
+      margin-top: 0; /* Removido o margin-top, agora controlado pelo filter-cadastro-row */
+    }
+    .atleta-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px #0001;
+      padding: 15px 5px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      min-height: 170px; 
+    }
+    .atleta-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px #0002;
+    }
+    /* Estilo do avatar com a imagem */
+    .avatar {
+      width: 60px;
+      height: 60px;
+      background: #f1f5f9; 
+      color: #3b82f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 8px;
+      user-select: none;
+      overflow: hidden;
+    }
+    .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .atleta-nome {
+      font-size: 0.95em;
+      font-weight: 700;
+      color: #1f2937;
+      line-height: 1.2;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+    .atleta-posicao {
+      font-size: 0.8em;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    .action-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .action-modal.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .action-modal button {
+      width: 90%;
+      padding: 10px;
+      margin: 5px 0;
+      font-size: 0.9em;
+    }
+    .btn-pre { background: #10b981; }
+    .btn-pre:hover { background: #059669; }
+    .btn-pos { background: #ef4444; }
+    .btn-pos:hover { background: #dc2626; }
+    
     .poweredby {
       position: fixed; left:0; bottom:0; width: 100%; background: #f1f5f9;
       color:#3b82f6; font-size: 1em; padding: 13px 0 7px 0; text-align: center; font-weight: 600; letter-spacing: 0.02em; z-index:99;
@@ -80,20 +210,162 @@
       .escala label{font-size:0.93em; padding:7px 0;}
       th, td { font-size: 0.94em;}
       .poweredby { font-size: 0.98em;}
+      .atletas-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+      .avatar { width: 50px; height: 50px; }
+      .atleta-card { min-height: 150px; }
     }
-  </style>
+    
+    /* === HEADER E MENU HAMBÚRGUER === */
+    .header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 55px;
+        background: #2563eb;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 100;
+        box-sizing: border-box;
+    }
+    .menu-icon {
+        font-size: 1.5em;
+        cursor: pointer;
+        margin-right: 15px;
+    }
+    .header-title {
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    /* Side Drawer Styles */
+    .drawer {
+        position: fixed;
+        top: 0;
+        left: -250px; /* Escondido fora da tela */
+        width: 250px;
+        height: 100%;
+        background-color: #fff;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        transition: left 0.3s ease;
+        z-index: 150;
+    }
+    .drawer.open {
+        left: 0; /* Exibir */
+    }
+    .drawer-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 140;
+        display: none;
+    }
+    .drawer-overlay.open {
+        display: block;
+    }
+    .drawer-menu {
+        list-style: none;
+        padding: 0;
+        margin-top: 60px; /* Espaço para o cabeçalho do drawer */
+    }
+    .drawer-menu li {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        font-size: 1em;
+        color: #1f2937;
+        font-weight: 500;
+        transition: background 0.15s;
+    }
+    .drawer-menu li:hover {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    .drawer-header {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 55px;
+        background: #2563eb;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-sizing: border-box;
+    }
+</style>
 </head>
 <body>
-<div class="tabs">
-  <div class="tab active" data-tab="cadastro">Cadastro de Atletas</div>
-  <div class="tab" data-tab="prontidao">Prontidão (Pré)</div>
-  <div class="tab" data-tab="carga">Carga (Pós)</div>
-  <div class="tab" data-tab="dados">Dados Cadastrados</div>
+
+<!-- HEADER PRINCIPAL com Menu Hambúrguer -->
+<div class="header">
+    <i class="fas fa-bars menu-icon" onclick="toggleDrawer()"></i>
+    <span class="header-title">Coleta Esportiva Offline</span>
 </div>
 
-<div class="content tab-content" id="cadastro">
+<!-- SIDE DRAWER (Menu Hambúrguer) -->
+<div class="drawer-overlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="sideDrawer">
+    <div class="drawer-header">Menu de Navegação</div>
+    <ul class="drawer-menu">
+        <li onclick="goToTab('inicial'); toggleDrawer();">
+            <i class="fas fa-home" style="width: 20px;"></i> Inicial
+        </li>
+        <li onclick="goToTab('cadastro'); toggleDrawer();">
+            <i class="fas fa-user-plus" style="width: 20px;"></i> Novo Cadastro
+        </li>
+        <li onclick="goToTab('prontidao'); toggleDrawer();">
+            <i class="fas fa-heartbeat" style="width: 20px;"></i> Prontidão (Pré-treino)
+        </li>
+        <li onclick="goToTab('carga'); toggleDrawer();">
+            <i class="fas fa-bolt" style="width: 20px;"></i> Carga (Pós-treino)
+        </li>
+        <li onclick="goToTab('dados'); toggleDrawer();">
+            <i class="fas fa-database" style="width: 20px;"></i> Dados Cadastrados
+        </li>
+    </ul>
+</div>
+
+
+<!-- CONTEÚDOS DAS ABAS -->
+
+<!-- NOVA PÁGINA INICIAL (Inicial) -->
+<div class="content tab-content" id="inicial">
+  <h1 style="color:#2563eb; font-size:1.5em; margin-bottom: 5px;">Selecione o Atleta</h1>
+  <p style="color:#6b7280; font-weight:500; margin-top:0;">Clique no avatar do atleta para registrar os dados.</p>
+
+  <!-- NOVO: Container Flex para Filtro e Botão -->
+  <div class="filter-cadastro-row">
+    <!-- Campo de busca/filtro -->
+    <div class="field-block" style="padding: 10px; margin-bottom: 0;">
+      <label for="atletaSearch" style="font-weight: 500;">Filtrar por Nome:</label>
+      <input id="atletaSearch" type="text" placeholder="Digite o nome do atleta..." onkeyup="filterAtletas()">
+    </div>
+    <!-- Botão Compacto para o Novo Cadastro -->
+    <button class="btn-cadastro-compact" onclick="goToTab('cadastro')">
+        <i class="fas fa-user-plus"></i> Novo Cadastro
+    </button>
+  </div>
+  <!-- FIM NOVO CONTAINER FLEX -->
+
+  <div class="atletas-grid" id="atletasGrid">
+    <!-- Avatares serão renderizados aqui pelo JS -->
+  </div>
+</div>
+
+<!-- Conteúdo existente (Cadastro) -->
+<div class="content tab-content" id="cadastro" style="display:none">
   <form id="formAtleta">
     <div class="field-block">
+      <label style="font-size:1.1em; color:#2563eb;">Cadastro de Atletas</label>
       <label>Nome</label>
       <input id="nome" required="" type="text"/>
       <div class="row">
@@ -105,7 +377,6 @@
           <label>Posição</label>
           <select id="posicao" required="">
             <option value="">Selecione</option>
-            <option>Nenhuma</option>
             <option>Goleiro</option>
             <option>Defesa</option>
             <option>Meio-campo</option>
@@ -126,17 +397,23 @@
   </div>
 </div>
 
+<!-- Conteúdo existente (Prontidão) -->
 <div class="content tab-content" id="prontidao" style="display:none">
   <form id="formProntidao" onsubmit="salvarProntidao(event); return false;">
     <div class="field-block">
       <label style="font-size:1.1em; color:#2563eb;">Coleta de Prontidão (Pré)</label>
-      <label>Atleta</label>
-      <select id="prontidao-atleta" required=""></select>
+      <!-- CAMPO ATLETA REMOVIDO: O atleta é pré-selecionado ao entrar pela Home -->
+      <p id="prontidao-atleta-info" style="font-weight:bold; color:#f97316; margin: 0 0 10px 0; font-size: 1.1em;">
+        Atleta Selecionado: Nenhum
+      </p>
+      
       <div class="row">
         <div>
           <label>Data</label>
           <input id="prontidao-data" required="" type="date"/>
         </div>
+        <!-- Placeholder para manter o layout de row -->
+        <div style="flex: 1;"></div> 
       </div>
       <div>
         <label>Sono</label>
@@ -169,6 +446,9 @@
         </div>
       </div>
       <button style="margin-top:8px;" type="submit">Salvar Prontidão</button>
+      
+      <!-- Campo escondido para guardar o index do atleta selecionado -->
+      <input type="hidden" id="prontidao-atleta-index" value="-1" required>
     </div>
   </form>
   <div class="field-block">
@@ -177,17 +457,22 @@
   </div>
 </div>
 
+<!-- Conteúdo existente (Carga) -->
 <div class="content tab-content" id="carga" style="display:none">
   <form id="formCarga" onsubmit="salvarCarga(event); return false;">
     <div class="field-block">
       <label style="font-size:1.1em; color:#2563eb;">Coleta de Carga (Pós)</label>
-      <label>Atleta</label>
-      <select id="carga-atleta" required=""></select>
+      <!-- CAMPO ATLETA REMOVIDO: O atleta é pré-selecionado ao entrar pela Home -->
+      <p id="carga-atleta-info" style="font-weight:bold; color:#f97316; margin: 0 0 10px 0; font-size: 1.1em;">
+        Atleta Selecionado: Nenhum
+      </p>
+
       <div class="row">
         <div>
           <label>Data</label>
           <input id="carga-data" required="" type="date"/>
         </div>
+        <div style="flex: 1;"></div>
       </div>
       <label>PSE</label>
       <div class="escala" id="escala-pse"></div>
@@ -213,6 +498,9 @@
         </div>
       </div>
       <button style="margin-top:8px;" type="submit">Salvar Carga</button>
+      
+      <!-- Campo escondido para guardar o index do atleta selecionado -->
+      <input type="hidden" id="carga-atleta-index" value="-1" required>
     </div>
   </form>
   <div class="field-block">
@@ -221,6 +509,7 @@
   </div>
 </div>
 
+<!-- Conteúdo existente (Dados) -->
 <div class="content tab-content" id="dados" style="display:none">
   <div class="field-block">
     <label style="font-size:1.1em; color:#2563eb;">Atletas</label>
@@ -239,8 +528,79 @@
   Powered by Ciente - Inteligência Esportiva
 </div>
 
-<!-- Escalas, selects e renderização -->
+<!-- Escalas, renderização e lógica de navegação -->
 <script>
+// Variável para armazenar o atleta selecionado (opcional, mas útil para referência)
+let selectedAthleteIndex = -1; 
+const ATLETA_IMAGE_URL = "images/player.png"; // Caminho da imagem no GitHub
+
+// Função para alternar o Menu Hambúrguer
+function toggleDrawer() {
+    document.getElementById('sideDrawer').classList.toggle('open');
+    document.querySelector('.drawer-overlay').classList.toggle('open');
+}
+
+// Função para mudar de aba programaticamente
+function goToTab(tabName, atletaIndex = -1) {
+    const contents = document.querySelectorAll(".tab-content");
+
+    // Oculta todos os conteúdos
+    contents.forEach(c => c.style.display = "none");
+
+    const activeContentEl = document.getElementById(tabName);
+    
+    // Exibe o conteúdo
+    if (activeContentEl) {
+        activeContentEl.style.display = "block";
+    }
+
+    // Se estiver indo para Prontidão ou Carga a partir da Home, pré-seleciona o atleta
+    if (atletaIndex !== -1) {
+        selectedAthleteIndex = atletaIndex; // Guarda o index globalmente
+        const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+        // Garante a ordenação para que o index local seja o correto
+        atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
+        const atleta = atletas[atletaIndex];
+
+        if (tabName === "prontidao") {
+            // Atualiza o campo escondido com o index
+            document.getElementById("prontidao-atleta-index").value = atletaIndex;
+            // Mostra o nome do atleta
+            document.getElementById("prontidao-atleta-info").textContent = `Atleta Selecionado: ${atleta.nome}`;
+            // Garante que a data de prontidão esteja preenchida
+            document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
+        } else if (tabName === "carga") {
+            // Atualiza o campo escondido com o index
+            document.getElementById("carga-atleta-index").value = atletaIndex;
+            // Mostra o nome do atleta
+            document.getElementById("carga-atleta-info").textContent = `Atleta Selecionado: ${atleta.nome}`;
+            // Garante que a data de carga esteja preenchida
+            document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
+        }
+    } else {
+         // Se não veio da Home (veio do menu), limpa a seleção
+         selectedAthleteIndex = -1;
+         if (tabName === "prontidao") {
+            document.getElementById("prontidao-atleta-index").value = -1;
+            document.getElementById("prontidao-atleta-info").textContent = `Atleta Selecionado: Nenhum`;
+         } else if (tabName === "carga") {
+            document.getElementById("carga-atleta-index").value = -1;
+            document.getElementById("carga-atleta-info").textContent = `Atleta Selecionado: Nenhum`;
+         }
+    }
+
+    // Atualiza os registros ao abrir as abas
+    if(tabName === "prontidao") renderProntidao();
+    if(tabName === "carga") renderCarga();
+    if(tabName === "dados") {
+        renderAtletas(); // Renderiza a tabela também, se necessário
+        renderProntidao();
+        renderCarga();
+    }
+}
+
+// === LÓGICA DE ESCALAS ===
+
 function renderEscala(id, classeBase, max, name) {
   const el = document.getElementById(id);
   el.innerHTML = "";
@@ -261,12 +621,7 @@ function renderEscala(id, classeBase, max, name) {
     el.appendChild(label);
   }
 }
-document.addEventListener("DOMContentLoaded", () => {
-  renderEscala("escala-sono", "escala-hooper", 7, "sono");
-  renderEscala("escala-estresse", "escala-hooper", 7, "estresse");
-  renderEscala("escala-fadiga", "escala-hooper", 7, "fadiga");
-  renderEscala("escala-dor", "escala-hooper", 7, "dor");
-});
+
 function renderEscalaPSE() {
   const el = document.getElementById("escala-pse");
   if (!el) return;
@@ -287,32 +642,150 @@ function renderEscalaPSE() {
     el.appendChild(label);
   }
 }
-document.addEventListener("DOMContentLoaded", renderEscalaPSE);
 
+document.addEventListener("DOMContentLoaded", () => {
+  renderEscala("escala-sono", "escala-hooper", 7, "sono");
+  renderEscala("escala-estresse", "escala-hooper", 7, "estresse");
+  renderEscala("escala-fadiga", "escala-hooper", 7, "fadiga");
+  renderEscala("escala-dor", "escala-hooper", 7, "dor");
+  renderEscalaPSE();
+  
+  // Inicialmente, vai para a aba 'inicial'
+  goToTab('inicial');
+});
+
+// === LÓGICA DE AVATARES E ATLETAS ===
+
+// Handler para abrir o modal de ações do atleta
+function openAthleteActions(atletaIndex) {
+    // Esconde qualquer modal aberto anteriormente
+    document.querySelectorAll('.action-modal').forEach(modal => {
+        modal.classList.remove('show');
+    });
+
+    // Encontra o card pai
+    const card = document.querySelector(`.atleta-card[data-index="${atletaIndex}"]`);
+    if (!card) return;
+
+    // Garante que o modal dentro do card esteja visível
+    const modal = card.querySelector('.action-modal');
+    modal.classList.add('show');
+}
+
+// Handler para fechar o modal (clicando fora ou no card do atleta)
+document.addEventListener('click', (e) => {
+    // Se o clique não foi dentro de um .atleta-card, fecha todos os modais
+    if (!e.target.closest('.atleta-card')) {
+        document.querySelectorAll('.action-modal').forEach(modal => {
+            modal.classList.remove('show');
+        });
+    }
+});
+
+
+// Função para filtrar atletas (chamada no onkeyup do input)
+function filterAtletas() {
+    const query = document.getElementById('atletaSearch').value;
+    renderAvatares(query);
+}
+
+
+// Função para renderizar os avatares na página inicial
+function renderAvatares(filterQuery = '') {
+  const allAtletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+
+  // 1. Aplica a ordenação alfabética
+  allAtletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
+
+  // 2. Aplica o filtro
+  const lowerCaseQuery = filterQuery.toLowerCase().trim();
+  const filteredAtletas = lowerCaseQuery
+    ? allAtletas.filter(a => (a.nome || '').toLowerCase().includes(lowerCaseQuery))
+    : allAtletas;
+  
+  const grid = document.getElementById('atletasGrid');
+  if (!grid) return;
+
+  grid.innerHTML = filteredAtletas.map((a) => {
+    // IMPORTANTE: Encontra o index global (original no array allAtletas)
+    const globalIndex = allAtletas.findIndex(item => item.nome === a.nome);
+
+    // Lógica do Avatar com fallback para ÍCONE (fa-user-circle)
+    // O atributo onerror irá substituir o <img> pelo ícone e remover a borda.
+    const avatarContent = `
+        <img 
+            src="${ATLETA_IMAGE_URL}" 
+            alt="Avatar de ${a.nome}" 
+            onerror="this.onerror=null; 
+                     this.parentNode.innerHTML='<i class=\\"fas fa-user-circle\\" style=\\"font-size: 2.5em;\\"></i>';
+                     this.parentNode.style.border='none';"
+        >`;
+
+    return `
+      <div class="atleta-card" data-index="${globalIndex}" onclick="openAthleteActions(${globalIndex})">
+        <div class="avatar" style="border: 3px solid #bfdbfe;">
+            ${avatarContent}
+        </div>
+        <div class="atleta-nome">${a.nome}</div>
+        <div class="atleta-posicao">${a.posicao}</div>
+
+        <!-- Modal de Ações -->
+        <div class="action-modal">
+            <button class="btn-pre" onclick="event.stopPropagation(); goToTab('prontidao', ${globalIndex})">
+                Pré-treino/jogo
+            </button>
+            <button class="btn-pos" onclick="event.stopPropagation(); goToTab('carga', ${globalIndex})">
+                Pós-treino/jogo
+            </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // Exibir mensagem se não houver resultados
+  if (filteredAtletas.length === 0 && lowerCaseQuery.length > 0) {
+      grid.innerHTML = `<p style="text-align:center; color:#6b7280; font-style: italic; margin-top: 30px;">
+        Nenhum atleta encontrado com o nome "${filterQuery}".
+      </p>`;
+  }
+}
+
+
+// Função renderAtletas (para o tab Cadastro/Dados)
 function renderAtletas() {
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  // Ordenação é essencial para consistência do índice
   atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
+
+  // Renderiza tabelas (Cadastro e Dados)
   let t = '<tr><th>Nome</th><th>Idade</th><th>Posição</th><th>Categoria</th><th>Modalidade</th><th>Ações</th></tr>';
-  atletas.forEach((a, i) => t += `<tr>
+  let tBody = atletas.map((a, i) => `<tr>
     <td>${a.nome}</td>
     <td>${a.idade}</td>
     <td>${a.posicao}</td>
     <td>${a.categoria || ""}</td>
     <td>${a.modalidade}</td>
     <td><button class="btn-excluir" onclick="excluirAtleta(${i})">Excluir</button></td>
-  </tr>`);
-  document.getElementById('tableAtletas').innerHTML = t;
-  document.getElementById('dadosAtletas').innerHTML = t;
-  ['prontidao-atleta','carga-atleta'].forEach(id => {
-    const sel = document.getElementById(id);
-    sel.innerHTML = '<option value="">Selecione</option>' + atletas.map((a, i) => `<option value="${i}">${a.nome}</option>`).join('');
-  });
+  </tr>`).join('');
+  t += tBody;
+
+  if(document.getElementById('tableAtletas')) document.getElementById('tableAtletas').innerHTML = t;
+  if(document.getElementById('dadosAtletas')) document.getElementById('dadosAtletas').innerHTML = t;
+
+  // Renderiza os avatares (sem filtro na inicialização)
+  renderAvatares('');
 }
+
 function excluirAtleta(index) {
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+  // A ordenação é necessária antes de usar o index
   atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
+
+  // Remove o atleta (o index está correto após a ordenação)
   atletas.splice(index, 1);
   localStorage.setItem("atletas", JSON.stringify(atletas));
+
+  alert("Atleta excluído com sucesso. ATENÇÃO: A exclusão por índice pode causar inconsistência nos registros de Prontidão/Carga existentes.");
   renderAtletas();
 }
 document.addEventListener("DOMContentLoaded", renderAtletas);
@@ -331,17 +804,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const atleta = { nome, idade, posicao, categoria, modalidade };
     const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
+    
+    // Adiciona o novo atleta e re-ordena (para consistência do índice)
+    atletas.push(atleta);
     atletas.sort((a,b)=>((a?.nome||'').localeCompare(b?.nome||'', 'pt', {sensitivity:'base'})));
-  atletas.push(atleta);
+
     localStorage.setItem("atletas", JSON.stringify(atletas));
-    renderAtletas();
+    renderAtletas(); // Atualiza avatares
     alert("Atleta cadastrado com sucesso.");
     this.reset();
+    // Volta para a página inicial após o cadastro
+    goToTab('inicial');
   });
 });
 </script>
 
-<!-- Firebase -->
+<!-- Firebase (mantido o seu setup original) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
@@ -357,19 +835,24 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 </script>
 
-<!-- Função para salvar Prontidão (com salto/vfc null) -->
+<!-- Função para salvar Prontidão (AJUSTADA PARA USAR CAMPO HIDDEN) -->
 <script>
 function salvarProntidao(event) {
   event.preventDefault();
 
-  const atletaIndex = document.getElementById("prontidao-atleta").value;
-  const data = document.getElementById("prontidao-data").value;
-  const sono = parseInt(document.querySelector('input[name="sono"]:checked')?.value || 0);
-  const estresse = parseInt(document.querySelector('input[name="estresse"]:checked')?.value || 0);
-  const fadiga = parseInt(document.querySelector('input[name="fadiga"]:checked')?.value || 0);
-  const dor = parseInt(document.querySelector('input[name="dor"]:checked')?.value || 0);
+  const atletaIndex = document.getElementById("prontidao-atleta-index").value;
 
-  // AJUSTE: Salto e VFC como null se vazio
+  if (atletaIndex === '-1') {
+      alert("Nenhum atleta selecionado. Por favor, volte para a tela Inicial e selecione um atleta.");
+      return false;
+  }
+
+  const data = document.getElementById("prontidao-data").value;
+  const sono = parseInt(document.querySelector('#formProntidao input[name="sono"]:checked')?.value || 0);
+  const estresse = parseInt(document.querySelector('#formProntidao input[name="estresse"]:checked')?.value || 0);
+  const fadiga = parseInt(document.querySelector('#formProntidao input[name="fadiga"]:checked')?.value || 0);
+  const dor = parseInt(document.querySelector('#formProntidao input[name="dor"]:checked')?.value || 0);
+
   let saltoInput = document.getElementById("salto").value;
   let vfcInput = document.getElementById("vfc").value;
   const salto = saltoInput === "" ? null : parseFloat(saltoInput);
@@ -380,19 +863,19 @@ function salvarProntidao(event) {
   const atleta = atletas[atletaIndex];
 
   if (!atleta || !data || isNaN(sono) || isNaN(estresse) || isNaN(fadiga) || isNaN(dor)) {
-    alert("Preencha todos os campos obrigatórios.");
+    alert("Preencha todos os campos obrigatórios (Atleta e as 4 escalas).");
     return false;
   }
 
-  // calcular semana do ano
-  const dataObj = new Date(data);
+  // cálculo da semana do ano (mantido)
+  const dataObj = new Date(data + "T00:00:00");
   const primeiroDiaDoAno = new Date(dataObj.getFullYear(), 0, 1);
   const dias = Math.floor((dataObj - primeiroDiaDoAno) / (24 * 60 * 60 * 1000));
   const semana = Math.ceil((dias + primeiroDiaDoAno.getDay() + 1) / 7);
 
   const registro = {
     nome_atleta: atleta.nome || "",
-    atleta: atletaIndex,
+    atleta: parseInt(atletaIndex), // Salva como número
     data: data,
     sono: sono,
     estresse: estresse,
@@ -417,21 +900,32 @@ function salvarProntidao(event) {
     document.getElementById("formProntidao").reset();
     document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
     renderProntidao();
+    // Volta para a página inicial
+    goToTab('inicial');
   }).catch((e) => {
+    console.error("Erro no Firebase, salvando localmente:", e);
     alert("Erro ao enviar ao Firebase: " + e.message + ". Os dados foram salvos localmente.");
     renderProntidao();
+    goToTab('inicial');
   });
 }
 </script>
 
-<!-- Função para salvar Carga -->
+<!-- Função para salvar Carga (AJUSTADA PARA USAR CAMPO HIDDEN) -->
 <script>
 function salvarCarga(event) {
   event.preventDefault();
 
-  const atletaIndex = document.getElementById("carga-atleta").value;
-  const pse = parseInt(document.querySelector("input[name='pse']:checked")?.value);
+  const atletaIndex = document.getElementById("carga-atleta-index").value;
+
+  if (atletaIndex === '-1') {
+      alert("Nenhum atleta selecionado. Por favor, volte para a tela Inicial e selecione um atleta.");
+      return false;
+  }
+  
+  const pse = parseInt(document.querySelector("#formCarga input[name='pse']:checked")?.value);
   const tempo = parseInt(document.getElementById("tempo").value);
+  const qualidade = document.getElementById("qualidade").value;
   const dataStr = document.getElementById("carga-data").value;
 
   const atletas = JSON.parse(localStorage.getItem("atletas") || "[]");
@@ -439,22 +933,24 @@ function salvarCarga(event) {
   const atleta = atletas[atletaIndex];
 
   if (!atleta || !pse || !tempo || !dataStr) {
-    alert("Preencha todos os campos obrigatórios.");
+    alert("Preencha todos os campos obrigatórios (Atleta, PSE, Tempo e Data).");
     return false;
   }
 
-  // calcular semana do ano
-  const dataObj = new Date(dataStr);
+  // cálculo da semana do ano (mantido)
+  const dataObj = new Date(dataStr + "T00:00:00");
   const primeiroDiaDoAno = new Date(dataObj.getFullYear(), 0, 1);
   const dias = Math.floor((dataObj - primeiroDiaDoAno) / (24 * 60 * 60 * 1000));
   const semana = Math.ceil((dias + primeiroDiaDoAno.getDay() + 1) / 7);
 
   const registro = {
     nome_atleta: atleta.nome || "",
-    atleta: atletaIndex,
+    atleta: parseInt(atletaIndex), // Salva como número
     pse: pse,
     tempo: tempo,
     data: dataStr,
+    carga_interna: pse * tempo, 
+    qualidade_treino: qualidade || null,
     equipe_id: atleta.categoria || "",
     posicao_grupo: atleta.posicao || "",
     semana_id: "S" + semana,
@@ -471,14 +967,18 @@ function salvarCarga(event) {
     document.getElementById("formCarga").reset();
     document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
     renderCarga();
+    // Volta para a página inicial
+    goToTab('inicial');
   }).catch((e) => {
+    console.error("Erro no Firebase, salvando localmente:", e);
     alert("Erro ao enviar ao Firebase: " + e.message + ". Os dados foram salvos localmente.");
     renderCarga();
+    goToTab('inicial');
   });
 }
 </script>
 
-<!-- Renderização dos registros de Prontidão e Carga -->
+<!-- Renderização dos registros de Prontidão e Carga (mantido) -->
 <script>
 function renderProntidao() {
   const registros = JSON.parse(localStorage.getItem("prontidao") || "[]");
@@ -498,13 +998,17 @@ function renderProntidao() {
 
 function renderCarga() {
   const registros = JSON.parse(localStorage.getItem("carga") || "[]");
-  let t = "<tr><th>Atleta</th><th>Data</th><th>PSE</th><th>Tempo</th></tr>";
+  let t = "<tr><th>Atleta</th><th>Data</th><th>PSE</th><th>Tempo</th><th>Carga (PSE*T)</th></tr>";
   registros.slice(-10).reverse().forEach(r => {
+    // Calcula Carga Interna para exibir na tabela, caso não exista no registro (registros antigos)
+    const cargaInterna = r.carga_interna || (typeof r.pse === "number" && typeof r.tempo === "number" ? r.pse * r.tempo : "");
+
     t += `<tr>
       <td>${r.nome_atleta || ""}</td>
       <td>${r.data || ""}</td>
       <td>${typeof r.pse === "number" ? r.pse : ""}</td>
       <td>${typeof r.tempo === "number" ? r.tempo : ""}</td>
+      <td>${cargaInterna}</td>
     </tr>`;
   });
   if(document.getElementById("tableCarga")) document.getElementById("tableCarga").innerHTML = t;
@@ -514,54 +1018,24 @@ function renderCarga() {
 document.addEventListener("DOMContentLoaded", () => {
   renderProntidao();
   renderCarga();
+  renderAvatares();
 });
 </script>
 
-<!-- Data automática ao abrir abas -->
+<!-- Data automática ao abrir abas (mantido) -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toISOString().split("T")[0];
   if(document.getElementById("prontidao-data")){
-    document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
+    document.getElementById("prontidao-data").value = today;
   }
   if(document.getElementById("carga-data")){
-    document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
+    document.getElementById("carga-data").value = today;
   }
 });
 </script>
 
-<!-- Alternância entre abas: sempre o ÚLTIMO SCRIPT -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tabs = document.querySelectorAll(".tab");
-  const contents = document.querySelectorAll(".tab-content");
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.style.display = "none");
-      tab.classList.add("active");
-      const activeTab = tab.getAttribute("data-tab");
-      document.getElementById(activeTab).style.display = "block";
-      // Preenche data automática nas abas corretas
-      if(activeTab === "prontidao" && document.getElementById("prontidao-data")){
-        document.getElementById("prontidao-data").value = new Date().toISOString().split("T")[0];
-      }
-      if(activeTab === "carga" && document.getElementById("carga-data")){
-        document.getElementById("carga-data").value = new Date().toISOString().split("T")[0];
-      }
-      // Atualiza os registros ao abrir as abas
-      if(activeTab === "prontidao") renderProntidao();
-      if(activeTab === "carga") renderCarga();
-      if(activeTab === "dados") {
-        renderAtletas();
-        renderProntidao();
-        renderCarga();
-      }
-    });
-  });
-});
-</script>
-
-<!-- SEED de atletas (lista EXATA da sua planilha, em ordem alfabética) -->
+<!-- SEED de atletas (mantido o seu array) -->
 <script>
 const SEED_ATLETAS = [
   {
